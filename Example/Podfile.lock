@@ -1,0 +1,23 @@
+PODS:
+  - CryptoSwift (0.2.3)
+  - DRCleverbotAPISwift (0.1.0):
+    - CryptoSwift (~> 0.2.3)
+  - Nimble (3.0.0)
+  - Quick (0.8.0)
+
+DEPENDENCIES:
+  - DRCleverbotAPISwift (from `../`)
+  - Nimble (= 3.0.0)
+  - Quick (~> 0.8.0)
+
+EXTERNAL SOURCES:
+  DRCleverbotAPISwift:
+    :path: ../
+
+SPEC CHECKSUMS:
+  CryptoSwift: b2bf37b8e7cc6d682ef3365cb966bc5ae5174aa5
+  DRCleverbotAPISwift: 9ab9084fd77ef6b7a5bb605c74d6127221af94ea
+  Nimble: 4c353d43735b38b545cbb4cb91504588eb5de926
+  Quick: 563d0f6ec5f72e394645adb377708639b7dd38ab
+
+COCOAPODS: 0.39.0

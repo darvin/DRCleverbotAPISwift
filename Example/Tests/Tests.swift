@@ -4,47 +4,104 @@ import Quick
 import Nimble
 import DRCleverbotAPISwift
 
-class TableOfContentsSpec: QuickSpec {
+class CleverBotSpec: QuickSpec {
     override func spec() {
-        describe("these will fail") {
+        
+        describe("clever bot") {
+            it ("should be initialized and send first request") {
+                waitUntil(timeout: 10) { done in
 
-            it("can do maths") {
-                expect(1) == 2
-            }
-
-            it("can read") {
-                expect("number") == "string"
-            }
-
-            it("will eventually fail") {
-                expect("time").toEventually( equal("done") )
+                    let cleverBot = DRCleverBot();
+                    cleverBot.startSession({ () -> () in
+                        cleverBot.ask("Hi!", completion: { (answer:String?) -> Void in
+                            expect(answer).toNot(beNil())
+                            expect(answer!.characters.count).to(beGreaterThan(1))
+                            expect(answer!.characters.count).to(beLessThan(100))
+                            done()
+                        })
+                    });
+                }
             }
             
-            context("these will pass") {
+            
+            it ("should do conversation") {
+                waitUntil(timeout: 10) { done in
+                    
+                    let cleverBot = DRCleverBot();
+                    cleverBot.startSession({ () -> () in
+                        cleverBot.ask("Hi!", completion: { (answer:String?) -> Void in
+                            print (" cleverbot => ", answer)
+                            expect(answer).toNot(beNil())
+                            expect(answer!.characters.count).to(beGreaterThan(1))
+                            expect(answer!.characters.count).to(beLessThan(100))
+                            cleverBot.ask("My name is Sergey!", completion: { (answer:String?) -> Void in
+                                print (" cleverbot => ", answer)
 
-                it("can do maths") {
-                    expect(23) == 23
-                }
+                                expect(answer).toNot(beNil())
+                                expect(answer!.characters.count).to(beGreaterThan(1))
+                                expect(answer!.characters.count).to(beLessThan(100))
+                                cleverBot.ask("What is my name?", completion: { (answer:String?) -> Void in
+                                    print (" cleverbot => ", answer)
 
-                it("can read") {
-                    expect("🐮") == "🐮"
-                }
+                                    expect(answer).toNot(beNil())
+                                    expect(answer!.characters.count).to(beGreaterThan(1))
+                                    expect(answer!.characters.count).to(beLessThan(100))
+                                    done()
+                                })
 
-                it("will eventually pass") {
-                    var time = "passing"
+                            })
 
-                    dispatch_async(dispatch_get_main_queue()) {
-                        time = "done"
-                    }
-
-                    waitUntil { done in
-                        NSThread.sleepForTimeInterval(0.5)
-                        expect(time) == "done"
-
-                        done()
-                    }
+                        })
+                    });
                 }
             }
+            it ("should do conversation when 2 bots are connected") {
+                waitUntil(timeout: 10) { done in
+                    
+                    let cleverBot1 = DRCleverBot();
+                    let cleverBot2 = DRCleverBot();
+                    cleverBot1.startSession({ () -> () in
+                        cleverBot2.startSession({ () -> () in
+                            print (" cleverbot2 => ", "Hi!")
+
+                            cleverBot1.ask("Hi!", completion: { (answer:String?) -> Void in
+                                print (" cleverbot1 => ", answer)
+
+                                expect(answer).toNot(beNil())
+                                expect(answer!.characters.count).to(beGreaterThan(1))
+                                expect(answer!.characters.count).to(beLessThan(100))
+                                cleverBot2.ask(answer!, completion: { (answer:String?) -> Void in
+                                    print (" cleverbot2 => ", answer)
+
+                                    expect(answer).toNot(beNil())
+                                    expect(answer!.characters.count).to(beGreaterThan(1))
+                                    expect(answer!.characters.count).to(beLessThan(100))
+                                    cleverBot1.ask(answer!, completion: { (answer:String?) -> Void in
+                                        print (" cleverbot1 => ", answer)
+
+                                        expect(answer).toNot(beNil())
+                                        expect(answer!.characters.count).to(beGreaterThan(1))
+                                        expect(answer!.characters.count).to(beLessThan(100))
+                                        cleverBot2.ask(answer!, completion: { (answer:String?) -> Void in
+                                            print (" cleverbot2 => ", answer)
+
+                                            expect(answer).toNot(beNil())
+                                            expect(answer!.characters.count).to(beGreaterThan(1))
+                                            expect(answer!.characters.count).to(beLessThan(100))
+                                            done()
+                                            
+                                        })
+                                    })
+                                    
+                                })
+                                
+                            })
+                        })
+                    })
+                }
+            }
+
+            
         }
     }
 }

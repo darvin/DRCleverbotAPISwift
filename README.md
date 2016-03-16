@@ -20,6 +20,8 @@ it, simply add the following line to your Podfile:
 pod "DRCleverbotAPISwift"
 ```
 
+
+
 ## Author
 
 Sergey Klimov, sergey.v.klimov@gmail.com
