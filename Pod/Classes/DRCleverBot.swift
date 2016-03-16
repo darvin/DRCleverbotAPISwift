@@ -9,7 +9,6 @@
 // thanks to https://github.com/folz/cleverbot.py
 import NSURL_QueryDictionary
 import CryptoSwift
-import AGQueryString
 
 
 extension Dictionary {
