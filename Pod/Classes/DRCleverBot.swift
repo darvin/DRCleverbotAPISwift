@@ -30,8 +30,8 @@ let RESOURCE = "/webservicemin"
 let API_URL = PROTOCOL + HOST + RESOURCE
 
 
-public class DRCleverBot {
-    var data:[String:String] = [
+func freshData()->[String:String] {
+    return [
         "stimulus": "",
         "start": "y",  // Never modified
         "sessionid": "",
@@ -56,6 +56,10 @@ public class DRCleverBot {
         "islearning": "1",  // Never modified
         "cleanslate": "False",  // Never modified
     ]
+}
+
+public class DRCleverBot {
+    var data:[String:String] = freshData()
     var conversation = [String]()
     var session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
     public init(){
@@ -64,7 +68,12 @@ public class DRCleverBot {
     
     public func startSession(completion:() -> ()) {
         let request = NSURLRequest(URL: NSURL(string: PROTOCOL+HOST)!);
-    
+        for cookie in NSHTTPCookieStorage.sharedHTTPCookieStorage().cookies! {
+            NSHTTPCookieStorage.sharedHTTPCookieStorage().deleteCookie(cookie)
+
+        }
+        self.data = freshData()
+        self.conversation = []
         let task = session.dataTaskWithRequest(request) { (data, resp, err) -> Void in
             if let httpResponse = resp as? NSHTTPURLResponse {
                 if let headerFields = httpResponse.allHeaderFields as? [String: String] {
@@ -103,6 +112,12 @@ public class DRCleverBot {
     }
     
     func _parseResponse(response:String, completion:(String?) -> Void) {
+        if (response == "3600") {
+            self.startSession({ () -> () in
+                completion("Cleverbot: reloading session... :(")
+            })
+            return
+        }
         let parsed = response.componentsSeparatedByString("\r\r\r\r\r\r").map() { $0.componentsSeparatedByString("\r") }
         
         if parsed[0][1] == "DENIED" {
@@ -140,6 +155,10 @@ public class DRCleverBot {
 
 
         let task = self.session.dataTaskWithRequest(request) { (data, resp, error) -> Void in
+            if error != nil {
+                completion("Cleverbot: connection error :(")
+                return
+            }
             let responseStr = String(data: data!, encoding: NSUTF8StringEncoding)
             self._parseResponse(responseStr!, completion: completion)
         }
