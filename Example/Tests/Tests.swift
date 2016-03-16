@@ -9,7 +9,7 @@ class CleverBotSpec: QuickSpec {
         
         describe("clever bot") {
             it ("should be initialized and send first request") {
-                waitUntil(timeout: 10) { done in
+                waitUntil(timeout: 20) { done in
 
                     let cleverBot = DRCleverBot();
                     cleverBot.startSession({ () -> () in
@@ -25,7 +25,7 @@ class CleverBotSpec: QuickSpec {
             
             
             it ("should do conversation") {
-                waitUntil(timeout: 10) { done in
+                waitUntil(timeout: 30) { done in
                     
                     let cleverBot = DRCleverBot();
                     cleverBot.startSession({ () -> () in
